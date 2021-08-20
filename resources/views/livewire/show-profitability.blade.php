@@ -1,0 +1,3 @@
+<div>
+    {{$profitability}}
+</div>
