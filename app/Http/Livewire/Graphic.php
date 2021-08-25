@@ -8,19 +8,34 @@ use Livewire\Component;
 class Graphic extends Component
 {
     public $data;
+
     public $values;
+    public $period;
+    public $listeners = ['changeGraphicPeriod'=>'rerender'];
 
+    public function mount($period = ['period'=>'day'])
+    {
 
-public function mount()
-{
-    $this->data = DataPreparer::prepareUserCash();
-}
+        $this->period = $period;
+        $this->data = DataPreparer::prepareUserCash( $this->period);
 
-
-
+    }
     public function render()
     {
-        $data = DataPreparer::prepareUserCash();
-        return view('livewire.graphic',['data'=>$data]);
+        $this->data = DataPreparer::prepareUserCash( $this->period);
+        return view('livewire.graphic',['data'=>$this->data]);
     }
+
+
+    public function rerender($period)
+    {
+        $this->period = $period;
+
+        $this->data = DataPreparer::prepareUserCash( $this->period);
+
+//        return view('livewire.graphic',['data'=>$this->data]);
+    }
+
+
+
 }

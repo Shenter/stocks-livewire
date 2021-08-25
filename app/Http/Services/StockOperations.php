@@ -31,14 +31,15 @@ class StockOperations
 
     public function sellStocks(Stock $stock)
     {
-        $cost = round( $stock->getLatestPrice() * (1 - Stock::$TAX / 100));
-      //  $adminMoney = DB::table('admin_money')->first()->sum + $price * $count * (Stock::$TAX / 100);
-     //   DB::table('admin_money')->update(['sum' => $adminMoney]);
-        $user = Auth::user();
-        $user->money += $cost;
-        $user->save();
-        //->save();
-        StockUser::where([ 'user_id' => Auth::user()->id, 'stock_id' => $stock->id])->take(1)->delete();
+
+
+            $cost = round($stock->getLatestPrice() * (1 - Stock::$TAX / 100));
+            //  $adminMoney = DB::table('admin_money')->first()->sum + $price * $count * (Stock::$TAX / 100);
+            //   DB::table('admin_money')->update(['sum' => $adminMoney]);
+            $user = Auth::user();
+            $user->money += $cost;
+            $user->save();
+            StockUser::where(['user_id' => Auth::user()->id, 'stock_id' => $stock->id])->take(1)->delete();
 
     }
 

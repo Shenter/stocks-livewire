@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 class DataPreparer
 {
 
-    public static function prepareStockData(): array
+    public static function prepareStockData($period): array
     {
         $period = request()->period ?? 'day';
         $stock = request()->stock;
@@ -73,10 +73,12 @@ class DataPreparer
         return $values . ']';
     }
 
-    public static function prepareUserCash():array
+    public static function prepareUserCash($period):array
     {
-        $period = request()->period ?? 'day' ;
-        switch ($period) {
+        logger($period['period']);
+//        $period = $period ?? 'day' ;
+//        logger( $period );
+        switch ($period['period']) {
             case 'day':
             {
                 $datesHistory = DB::table('users_cash')
@@ -97,6 +99,7 @@ class DataPreparer
             }
             case 'month':
             {
+
                 $datesHistory = DB::table('users_cash')
                     ->select(DB::raw(('date(created_at) as created_at')))
                     ->where(['user_id'=>Auth::user()->id])
@@ -111,21 +114,7 @@ class DataPreparer
                         ->avg('sum');
                 }
             }
-            default:
-            {
-                $datesHistory = DB::table('users_cash')
-                    ->select(DB::raw(('date(created_at) as created_at')))
-                    ->where(['user_id' => Auth::user()->id])
-                    ->groupByRaw('date(created_at)')
-                    ->latest()
-                    ->get('created_at');
-                foreach ($datesHistory as $item) {
-                    $valuesHistory[] = DB::table('users_cash')
-                        ->where(['user_id' => Auth::user()->id])
-                        ->whereDate('created_at', '=', $item->created_at)
-                        ->avg('sum');
-                }
-            }
+
         }
         $values = self::wrapValuesHistory($valuesHistory);
         return ['dates'=>$datesHistory,'values'=>$values];

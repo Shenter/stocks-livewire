@@ -16,8 +16,9 @@ class BuyStockButton extends Component
     public $listeners=['stockCountChanged'=>'refreshButton'];
     public function buyStock(Stock $stock)
     {
+
         $this->stockProvider = new StockOperations();
-        //TODO Проверка данных
+
         $price = $stock->getLatestPrice();
 //        $count = $request->count;
         //Если цена в реквесте ниже реальной цены, то это ошибка
@@ -26,10 +27,14 @@ class BuyStockButton extends Component
 //        }
         //Если сумма реквеста +1% меньше его денег, то ошибка
         if ($price * (1 + Stock::$TAX / 100) > Auth::user()->money) {
+            $this->addError('error','Not enough money');
 //           TODO Куда-то вывести ошибку
+
         }
-        $this->stockProvider->buyStocks(Auth::user(), $stock);
-        $this->emit('stockCountChanged');
+        else {
+            $this->stockProvider->buyStocks(Auth::user(), $stock);
+            $this->emit('stockCountChanged');
+        }
         // return redirect('stocks')->with(['messages'=>'Успешно куплено '.$count. ' шт. по цене '.$request->price]);
     }
 

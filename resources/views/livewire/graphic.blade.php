@@ -1,11 +1,13 @@
 <div>
 
-<canvas id="myChart"></canvas>
+
+
 
     <script>
+        document.addEventListener('livewire:load', function () {
         const labels = [
             @foreach   ($data['dates'] as $date)
-                "{{ $date->created_at}}",
+                "{{$date->created_at}}",
             @endforeach
         ];
         const data = {
@@ -22,9 +24,12 @@
             data,
             options: {}
         };
-        var myChart = new Chart(
+        let myChart = new Chart(
             document.getElementById('myChart'),
             config
         );
+        myChart.update();
+        })
     </script>
+    <canvas id="myChart"></canvas>
 </div>

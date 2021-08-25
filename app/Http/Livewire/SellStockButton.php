@@ -29,24 +29,15 @@ public $stock;
     public function sellStock(Stock $stock)
     {
         $this->stockProvider = new StockOperations();
-        //TODO Проверка данных, вдруг у него нет этих акций?
-//if (Auth::user()->howManyStocksCanSell($this->stock)>=1) {
-//
-//            return view('livewire.sell-stock-button', ['stock' => $this->stock]);
-//        } else {
-//            return view('livewire.sell-stock-button-disabled');
-//        }
-//        $count = $request->count;
-        //Если цена в реквесте ниже реальной цены, то это ошибка
-//        if($price < Stock::findorfail($stock)->getLatestPrice()) {
-//            return back()->withErrors(['message'=> 'Указана цена выше, чем цена биржи']);
-//        }
-        //Если сумма реквеста +1% меньше его денег, то ошибка
 
-//           TODO Куда-то вывести ошибку
-
-        $this->stockProvider->sellStocks( $stock);
-        $this->emit('stockCountChanged');
+        if (Auth::user()->howManyStocksCanSell($this->stock)>=1) {
+            $this->stockProvider->sellStocks( $stock);
+            $this->emit('stockCountChanged');
+        }
+        else
+        {
+            $this->addError('error','No stocks for sale');
+        }
     }
 
 

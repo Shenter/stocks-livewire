@@ -1,3 +1,5 @@
+<div>
+
 <button
     class="
 @if ($enabled)
@@ -10,3 +12,5 @@
     >
     Продать
 </button>
+    @error('error') <span style="color:red">{{ $message }}</span> @enderror
+</div>
